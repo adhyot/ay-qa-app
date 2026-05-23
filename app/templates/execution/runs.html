@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Execution Hub — QA Platform{% endblock %}
+{% block page_title %}Execution Hub{% endblock %}
+{% from 'execution/_tabs.html' import tab_bar %}
+
+{% block content %}
+{{ tab_bar('runs') }}
+<div class="module-card">
+  <div class="flex justify-between items-center" style="margin-bottom:18px;">
+    <h2 style="font-size:16px;font-weight:700;">Test Runs</h2>
+    <a href="#" class="btn btn-primary btn-sm">&#9654;&nbsp; Trigger Run</a>
+  </div>
+  {% if runs %}
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="border-bottom:2px solid var(--color-surface-subtle);">
+      <th style="text-align:left;padding:8px 10px;color:var(--color-text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">Suite</th>
+      <th style="text-align:left;padding:8px 10px;color:var(--color-text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">Status</th>
+      <th style="text-align:left;padding:8px 10px;color:var(--color-text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">Pass Rate</th>
+      <th style="text-align:left;padding:8px 10px;color:var(--color-text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;">Started</th>
+    </tr></thead>
+    <tbody>{% for run in runs %}
+    <tr style="border-bottom:1px solid var(--color-surface-subtle);">
+      <td style="padding:10px;"><a href="{{ url_for('execution.run_detail', run_id=run.id) }}">{{ run.suite.name if run.suite else 'Run ' + run.id[:8] }}</a></td>
+      <td style="padding:10px;"><span class="badge badge-{{ run.status }}">{{ run.status|title }}</span></td>
+      <td style="padding:10px;">{{ run.pass_rate }}%</td>
+      <td style="padding:10px;color:var(--color-text-muted);font-size:12px;">{{ run.started_at.strftime('%b %d, %H:%M') if run.started_at else '—' }}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+  {% else %}
+  <div class="empty-state" style="padding:60px;">No test runs yet. Trigger your first run to get started.</div>
+  {% endif %}
+</div>
+{% endblock %}
