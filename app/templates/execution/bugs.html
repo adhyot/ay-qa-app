@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Execution Hub — QA Platform{% endblock %}
+{% block page_title %}Execution Hub{% endblock %}
+{% from 'execution/_tabs.html' import tab_bar %}
+
+{% block content %}
+{{ tab_bar('bugs') }}
+<div class="module-card">
+  <div class="flex justify-between items-center" style="margin-bottom:18px;">
+    <h2 style="font-size:16px;font-weight:700;">Open Bugs</h2>
+    <a href="#" class="btn btn-primary btn-sm">+ Log Bug</a>
+  </div>
+  {% if bugs %}
+    {% for bug in bugs %}
+    <div class="item-row">
+      <span class="badge badge-{{ bug.severity }}">{{ bug.severity|title }}</span>
+      <div class="item-name">{{ bug.title }}</div>
+      <span class="badge badge-{{ 'warning' if bug.status == 'in_progress' else 'danger' }}">{{ bug.status|replace('_',' ')|title }}</span>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-state" style="padding:60px;">No open bugs. All clear!</div>
+  {% endif %}
+</div>
+{% endblock %}
