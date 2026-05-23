@@ -22,3 +22,13 @@ def test_bugs_page_has_tab_bar(client):
     assert b'Bugs' in r.data
     assert b'Deployments' in r.data
     assert b'Execution Hub' in r.data
+
+
+def test_deployments_page_has_tab_bar(client):
+    r = client.get('/execution/deployments')
+    assert r.status_code == 200
+    assert b'exec-tabs' in r.data
+    assert b'Test Runs' in r.data
+    assert b'Bugs' in r.data
+    assert b'Deployments' in r.data
+    assert b'Execution Hub' in r.data
