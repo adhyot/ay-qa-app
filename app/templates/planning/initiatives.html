@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Initiatives — QA Platform{% endblock %}
+{% block page_title %}Initiatives{% endblock %}
+{% block content %}
+<div class="module-card">
+  <div class="flex justify-between items-center" style="margin-bottom:18px;">
+    <h2 style="font-size:16px;font-weight:700;">Active Initiatives</h2>
+    <a href="#" class="btn btn-primary btn-sm">+ New Initiative</a>
+  </div>
+  {% if initiatives %}
+    {% for init in initiatives %}
+    <div class="item-row">
+      <div class="item-name text-bold">{{ init.name }}</div>
+      {% if init.jira_epic_key %}<span class="badge badge-info">{{ init.jira_epic_key }}</span>{% endif %}
+      <div class="item-meta">{{ init.coverage_pct|round(0)|int }}%</div>
+      <span class="badge badge-{{ 'success' if init.status == 'completed' else 'info' if init.status == 'active' else 'warning' }}">{{ init.status|title }}</span>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-state" style="padding:60px;">No initiatives yet. Create your first Jira-linked initiative.</div>
+  {% endif %}
+</div>
+{% endblock %}

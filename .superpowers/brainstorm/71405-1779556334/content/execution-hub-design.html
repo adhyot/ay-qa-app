@@ -1,0 +1,293 @@
+<h2>Execution Hub — Proposed Design</h2>
+<p class="subtitle">URL-based tabs with underline active state. Click the tabs in the mockups to see each view.</p>
+
+<style>
+  .mock-shell {
+    background: #F5F0E8;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #d8cfc4;
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+  .mock-topbar {
+    background: #fff;
+    border-bottom: 1px solid #d8cfc4;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .mock-brand { font-weight: 700; color: #8B7355; font-size: 13px; }
+  .mock-sep { color: #ccc; }
+  .mock-breadcrumb { color: #999; font-size: 11px; }
+  .mock-page { padding: 20px; }
+  .mock-module-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .mock-module-icon {
+    width: 36px; height: 36px;
+    background: #8B7355;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mock-module-title { font-size: 15px; font-weight: 700; color: #2d2d2d; }
+  .mock-module-sub { font-size: 11px; color: #8B7355; }
+
+  .mock-tabs {
+    display: flex;
+    border-bottom: 2px solid #d8cfc4;
+    margin-bottom: 16px;
+    gap: 0;
+  }
+  .mock-tab {
+    padding: 9px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s;
+  }
+  .mock-tab:hover { color: #8B7355; }
+  .mock-tab.active {
+    color: #8B7355;
+    border-bottom-color: #8B7355;
+    font-weight: 700;
+  }
+
+  .mock-content-box {
+    background: #fff;
+    border: 1px solid #d8cfc4;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .mock-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .mock-section-title { font-size: 14px; font-weight: 700; color: #2d2d2d; }
+  .mock-btn {
+    font-size: 11px;
+    padding: 5px 12px;
+    background: #8B7355;
+    color: #fff;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  .mock-btn-outline {
+    font-size: 11px;
+    padding: 5px 12px;
+    background: transparent;
+    border: 1px solid #8B7355;
+    color: #8B7355;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  .mock-table-head {
+    display: flex;
+    gap: 10px;
+    padding: 4px 0 8px;
+    border-bottom: 1px solid #e8e0d5;
+    font-size: 10px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    font-weight: 600;
+  }
+  .mock-table-row {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f5f0e8;
+    font-size: 12px;
+    color: #444;
+    align-items: center;
+  }
+  .mock-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-pass { background: #e8f5e9; color: #2e7d32; }
+  .badge-fail { background: #fdecea; color: #c62828; }
+  .badge-run  { background: #e3f2fd; color: #1565c0; }
+  .badge-crit { background: #fdecea; color: #c62828; }
+  .badge-high { background: #fff3e0; color: #e65100; }
+  .badge-med  { background: #fffde7; color: #f57f17; }
+  .badge-open { background: #f3e5f5; color: #6a1b9a; }
+  .badge-prog { background: #e3f2fd; color: #1565c0; }
+  .badge-dep  { background: #e8f5e9; color: #2e7d32; }
+  .mock-col-wide { flex: 2; }
+  .mock-col { flex: 1; }
+  .mock-col-sm { flex: 0.7; color: #aaa; font-size: 11px; }
+  .mock-empty { padding: 40px 0; text-align: center; color: #bbb; font-size: 12px; }
+
+  /* Tab switching */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #8B7355;
+    margin: 20px 0 10px;
+  }
+  .note-box {
+    background: #fff;
+    border: 1px solid #d8cfc4;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.6;
+  }
+  .note-box ul { margin: 6px 0 0 16px; padding: 0; }
+  .note-box li { margin-bottom: 4px; }
+  code {
+    background: #f0ebe3;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 11px;
+    color: #8B7355;
+    font-family: monospace;
+  }
+</style>
+
+<!-- Live mockup with interactive tabs -->
+<div class="mock-shell">
+  <div class="mock-topbar">
+    <span class="mock-brand">QA Platform</span>
+    <span class="mock-sep">/</span>
+    <span class="mock-breadcrumb">Execution Hub</span>
+  </div>
+  <div class="mock-page">
+    <div class="mock-module-header">
+      <div class="mock-module-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="2 12 6 12 8 4 10 20 12 11 14 15 16 12 22 12"/></svg>
+      </div>
+      <div>
+        <div class="mock-module-title">Execution Hub</div>
+        <div class="mock-module-sub">Runs, bugs and deployments</div>
+      </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="mock-tabs" id="mockTabs">
+      <div class="mock-tab active" data-panel="runs" onclick="switchTab(this)">Test Runs</div>
+      <div class="mock-tab" data-panel="bugs" onclick="switchTab(this)">Bugs</div>
+      <div class="mock-tab" data-panel="deployments" onclick="switchTab(this)">Deployments</div>
+    </div>
+
+    <!-- Test Runs panel -->
+    <div class="tab-panel active" id="panel-runs">
+      <div class="mock-content-box">
+        <div class="mock-content-header">
+          <span class="mock-section-title">Test Runs</span>
+          <span class="mock-btn">▶ Trigger Run</span>
+        </div>
+        <div class="mock-table-head">
+          <span class="mock-col-wide">Suite</span>
+          <span class="mock-col">Status</span>
+          <span class="mock-col">Pass Rate</span>
+          <span class="mock-col-sm">Started</span>
+        </div>
+        <div class="mock-table-row">
+          <span class="mock-col-wide">Smoke Suite</span>
+          <span class="mock-badge badge-pass">Passed</span>
+          <span class="mock-col">98%</span>
+          <span class="mock-col-sm">2h ago</span>
+        </div>
+        <div class="mock-table-row">
+          <span class="mock-col-wide">Regression Suite</span>
+          <span class="mock-badge badge-fail">Failed</span>
+          <span class="mock-col">72%</span>
+          <span class="mock-col-sm">5h ago</span>
+        </div>
+        <div class="mock-table-row">
+          <span class="mock-col-wide">Nightly Suite</span>
+          <span class="mock-badge badge-run">Running</span>
+          <span class="mock-col">—</span>
+          <span class="mock-col-sm">just now</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bugs panel -->
+    <div class="tab-panel" id="panel-bugs">
+      <div class="mock-content-box">
+        <div class="mock-content-header">
+          <span class="mock-section-title">Open Bugs</span>
+          <span class="mock-btn">+ Log Bug</span>
+        </div>
+        <div class="mock-table-row">
+          <span class="mock-badge badge-crit">Critical</span>
+          <span class="mock-col-wide">Login fails on Safari 17</span>
+          <span class="mock-badge badge-open">Open</span>
+        </div>
+        <div class="mock-table-row">
+          <span class="mock-badge badge-high">High</span>
+          <span class="mock-col-wide">Payment timeout on slow 3G</span>
+          <span class="mock-badge badge-prog">In Progress</span>
+        </div>
+        <div class="mock-table-row">
+          <span class="mock-badge badge-med">Medium</span>
+          <span class="mock-col-wide">Report export missing header row</span>
+          <span class="mock-badge badge-open">Open</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deployments panel -->
+    <div class="tab-panel" id="panel-deployments">
+      <div class="mock-content-box">
+        <div class="mock-empty">
+          Connect GitHub to see CI/CD pipeline status here.<br/>
+          <span style="display:inline-block;margin-top:10px;" class="mock-btn-outline">Connect GitHub</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function switchTab(el) {
+  document.querySelectorAll('#mockTabs .mock-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + el.dataset.panel).classList.add('active');
+}
+</script>
+
+<!-- Design notes -->
+<div class="section-label">What changes</div>
+<div class="note-box">
+  <ul>
+    <li><code>/execution/</code> redirects to <code>/execution/runs</code> — no more sub-tile index page</li>
+    <li>Each of the 3 templates gets the module header + tab bar added at the top</li>
+    <li>Active tab is determined by the current route — no JS needed for navigation</li>
+    <li>A shared Jinja2 macro renders the tab bar so it's written once, not three times</li>
+    <li>Tab bar CSS added to <code>main.css</code> — reusable across other modules later</li>
+  </ul>
+</div>
+
+<div class="section-label">What stays the same</div>
+<div class="note-box">
+  <ul>
+    <li>All 3 routes and their data-loading logic are unchanged</li>
+    <li>The existing content inside each template is unchanged</li>
+    <li>Breadcrumb in topbar stays as "Execution Hub" on all 3 pages</li>
+  </ul>
+</div>

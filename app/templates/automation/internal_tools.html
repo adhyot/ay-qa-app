@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Internal Tools — QA Platform{% endblock %}
+{% block page_title %}Internal Tools{% endblock %}
+{% block content %}
+<div class="module-card">
+  <div class="flex justify-between items-center" style="margin-bottom:18px;">
+    <h2 style="font-size:16px;font-weight:700;">Connected Tools</h2>
+    <a href="#" class="btn btn-primary btn-sm">+ Add Integration</a>
+  </div>
+  {% if integrations %}
+  <div class="tool-grid">{% for i in integrations %}
+  <div class="tool-chip {{ i.health_status }}" style="padding:8px 14px;font-size:13px;">
+    <div class="status-dot dot-{{ i.health_status }}"></div>
+    {{ i.name or i.type|title }}
+  </div>{% endfor %}</div>
+  {% else %}
+  <div class="empty-state" style="padding:60px;">No integrations connected. Add GitHub, Jira, Confluence, or Datadog.</div>
+  {% endif %}
+</div>
+{% endblock %}

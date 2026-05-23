@@ -1,0 +1,253 @@
+<h2>How should the tab navigation work?</h2>
+<p class="subtitle">Three approaches — pick the one that fits best</p>
+
+<style>
+  .mock-shell {
+    background: #F5F0E8;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #d8cfc4;
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+  }
+  .mock-topbar {
+    background: #fff;
+    border-bottom: 1px solid #d8cfc4;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+  }
+  .mock-brand { font-weight: 700; color: #8B7355; font-size: 13px; }
+  .mock-breadcrumb { color: #999; font-size: 11px; }
+  .mock-page { padding: 20px; }
+  .mock-module-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .mock-module-icon {
+    width: 36px; height: 36px;
+    background: #8B7355;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mock-module-icon svg { stroke: #fff; }
+  .mock-module-title { font-size: 15px; font-weight: 700; color: #2d2d2d; }
+  .mock-module-sub { font-size: 11px; color: #8B7355; }
+
+  /* Tab styles */
+  .mock-tabs {
+    display: flex;
+    border-bottom: 2px solid #d8cfc4;
+    margin-bottom: 16px;
+    gap: 0;
+  }
+  .mock-tab {
+    padding: 8px 18px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+  }
+  .mock-tab.active {
+    color: #8B7355;
+    border-bottom-color: #8B7355;
+    font-weight: 700;
+  }
+
+  /* Pill tab styles */
+  .mock-tabs-pill {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    background: #e8e0d5;
+    padding: 4px;
+    border-radius: 8px;
+    width: fit-content;
+  }
+  .mock-tab-pill {
+    padding: 6px 16px;
+    font-size: 12px;
+    color: #666;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .mock-tab-pill.active {
+    background: #fff;
+    color: #8B7355;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  /* Vertical tabs */
+  .mock-layout-side {
+    display: flex;
+    gap: 12px;
+  }
+  .mock-tabs-side {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 110px;
+  }
+  .mock-tab-side {
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #666;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .mock-tab-side.active {
+    background: #8B7355;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .mock-content-box {
+    background: #fff;
+    border: 1px solid #d8cfc4;
+    border-radius: 8px;
+    padding: 16px;
+    flex: 1;
+  }
+  .mock-table-row {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0ebe3;
+    font-size: 11px;
+    color: #555;
+    align-items: center;
+  }
+  .mock-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  .mock-badge-warn { background: #fff3e0; color: #e65100; }
+  .mock-badge-pass { background: #e3f2fd; color: #1565c0; }
+  .mock-empty-hint { color: #aaa; font-size: 11px; font-style: italic; }
+</style>
+
+<div class="options">
+
+  <!-- Option A: Underline tabs -->
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Underline Tabs</h3>
+      <p>Classic tab strip with an active underline — minimal, widely understood</p>
+      <div class="mock-shell" style="margin-top:10px;">
+        <div class="mock-topbar">
+          <span class="mock-brand">QA Platform</span>
+          <span class="mock-breadcrumb">/ Execution Hub</span>
+        </div>
+        <div class="mock-page">
+          <div class="mock-module-header">
+            <div class="mock-module-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="2 12 6 12 8 4 10 20 12 11 14 15 16 12 22 12"/></svg>
+            </div>
+            <div>
+              <div class="mock-module-title">Execution Hub</div>
+              <div class="mock-module-sub">Runs, bugs and deployments</div>
+            </div>
+          </div>
+          <div class="mock-tabs">
+            <div class="mock-tab active">Test Runs</div>
+            <div class="mock-tab">Bugs</div>
+            <div class="mock-tab">Deployments</div>
+          </div>
+          <div class="mock-content-box">
+            <div class="mock-table-row"><span class="mock-badge">Passed</span><span>Smoke Suite</span><span style="margin-left:auto;color:#aaa">98% · 2h ago</span></div>
+            <div class="mock-table-row"><span class="mock-badge-warn">Failed</span><span>Regression Suite</span><span style="margin-left:auto;color:#aaa">72% · 5h ago</span></div>
+            <div class="mock-table-row"><span class="mock-badge-pass">Running</span><span>Nightly Suite</span><span style="margin-left:auto;color:#aaa">— · just now</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: Pill tabs -->
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Pill / Segment Tabs</h3>
+      <p>Rounded segment control — feels modern, common in dashboards</p>
+      <div class="mock-shell" style="margin-top:10px;">
+        <div class="mock-topbar">
+          <span class="mock-brand">QA Platform</span>
+          <span class="mock-breadcrumb">/ Execution Hub</span>
+        </div>
+        <div class="mock-page">
+          <div class="mock-module-header">
+            <div class="mock-module-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="2 12 6 12 8 4 10 20 12 11 14 15 16 12 22 12"/></svg>
+            </div>
+            <div>
+              <div class="mock-module-title">Execution Hub</div>
+              <div class="mock-module-sub">Runs, bugs and deployments</div>
+            </div>
+          </div>
+          <div class="mock-tabs-pill">
+            <div class="mock-tab-pill active">Test Runs</div>
+            <div class="mock-tab-pill">Bugs</div>
+            <div class="mock-tab-pill">Deployments</div>
+          </div>
+          <div class="mock-content-box">
+            <div class="mock-table-row"><span class="mock-badge">Passed</span><span>Smoke Suite</span><span style="margin-left:auto;color:#aaa">98% · 2h ago</span></div>
+            <div class="mock-table-row"><span class="mock-badge-warn">Failed</span><span>Regression Suite</span><span style="margin-left:auto;color:#aaa">72% · 5h ago</span></div>
+            <div class="mock-table-row"><span class="mock-badge-pass">Running</span><span>Nightly Suite</span><span style="margin-left:auto;color:#aaa">— · just now</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option C: Side tabs -->
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Sidebar Tabs</h3>
+      <p>Vertical nav on the left — gives each section more horizontal space</p>
+      <div class="mock-shell" style="margin-top:10px;">
+        <div class="mock-topbar">
+          <span class="mock-brand">QA Platform</span>
+          <span class="mock-breadcrumb">/ Execution Hub</span>
+        </div>
+        <div class="mock-page">
+          <div class="mock-module-header">
+            <div class="mock-module-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="2 12 6 12 8 4 10 20 12 11 14 15 16 12 22 12"/></svg>
+            </div>
+            <div>
+              <div class="mock-module-title">Execution Hub</div>
+              <div class="mock-module-sub">Runs, bugs and deployments</div>
+            </div>
+          </div>
+          <div class="mock-layout-side">
+            <div class="mock-tabs-side">
+              <div class="mock-tab-side active">Test Runs</div>
+              <div class="mock-tab-side">Bugs</div>
+              <div class="mock-tab-side">Deployments</div>
+            </div>
+            <div class="mock-content-box">
+              <div class="mock-table-row"><span class="mock-badge">Passed</span><span>Smoke Suite</span><span style="margin-left:auto;color:#aaa">98%</span></div>
+              <div class="mock-table-row"><span class="mock-badge-warn">Failed</span><span>Regression</span><span style="margin-left:auto;color:#aaa">72%</span></div>
+              <div class="mock-table-row"><span class="mock-badge-pass">Running</span><span>Nightly</span><span style="margin-left:auto;color:#aaa">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

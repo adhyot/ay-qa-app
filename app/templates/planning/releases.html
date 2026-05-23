@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Release Status — QA Platform{% endblock %}
+{% block page_title %}Release Status{% endblock %}
+{% block content %}
+<div class="module-card">
+  <div class="flex justify-between items-center" style="margin-bottom:18px;">
+    <h2 style="font-size:16px;font-weight:700;">Releases</h2>
+    <a href="#" class="btn btn-primary btn-sm">+ New Release</a>
+  </div>
+  {% if releases %}
+    {% for rel in releases %}
+    <div class="item-row">
+      <div class="item-name"><span class="text-bold">{{ rel.version }}</span>{% if rel.name %} — {{ rel.name }}{% endif %}</div>
+      <div class="item-meta">{{ rel.coverage_pct|round(0)|int }}% covered</div>
+      <span class="badge badge-{{ 'success' if rel.status == 'released' else 'warning' if rel.status == 'planning' else 'info' }}">{{ rel.status|replace('_',' ')|title }}</span>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-state" style="padding:60px;">No releases planned yet. Create your first release.</div>
+  {% endif %}
+</div>
+{% endblock %}

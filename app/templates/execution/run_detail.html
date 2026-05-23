@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Run Detail — QA Platform{% endblock %}
+{% block page_title %}Test Run Detail{% endblock %}
+
+{% block content %}
+<div style="background:var(--color-surface-card); border-radius:var(--radius-tile); box-shadow:var(--shadow-card); padding:20px;">
+  <div class="flex justify-between items-center" style="margin-bottom:16px;">
+    <div>
+      <h2 style="font-size:16px; font-weight:600;">{{ run.suite.name if run.suite else 'Run ' + run.id[:8] }}</h2>
+      <div class="text-muted text-sm mt-1">Started: {{ run.started_at.strftime('%b %d %Y, %H:%M') if run.started_at else 'Not started' }}</div>
+    </div>
+    <span class="badge badge-{{ run.status }}" style="font-size:13px; padding:6px 14px;">{{ run.status | title }}</span>
+  </div>
+
+  <div class="kpi-bar" style="grid-template-columns: repeat(4,1fr); margin-bottom:20px;">
+    <div class="kpi-card"><div class="kpi-value">{{ run.total_count }}</div><div class="kpi-label">Total</div></div>
+    <div class="kpi-card"><div class="kpi-value" style="color:var(--color-success)">{{ run.pass_count }}</div><div class="kpi-label">Passed</div></div>
+    <div class="kpi-card"><div class="kpi-value" style="color:var(--color-danger)">{{ run.fail_count }}</div><div class="kpi-label">Failed</div></div>
+    <div class="kpi-card"><div class="kpi-value">{{ run.pass_rate }}%</div><div class="kpi-label">Pass Rate</div></div>
+  </div>
+
+  {% if results %}
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="border-bottom:2px solid var(--color-surface-subtle);">
+        <th style="text-align:left; padding:8px; color:var(--color-text-muted); font-size:11px; text-transform:uppercase;">Test Case</th>
+        <th style="text-align:left; padding:8px; color:var(--color-text-muted); font-size:11px; text-transform:uppercase;">Status</th>
+        <th style="text-align:left; padding:8px; color:var(--color-text-muted); font-size:11px; text-transform:uppercase;">Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+      <tr style="border-bottom:1px solid var(--color-surface-subtle);">
+        <td style="padding:10px 8px;">{{ r.test_case.title if r.test_case else r.test_case_id[:8] }}</td>
+        <td style="padding:10px 8px;"><span class="badge badge-{{ r.status }}">{{ r.status | title }}</span></td>
+        <td style="padding:10px 8px; color:var(--color-text-muted);">{{ (r.duration_ms / 1000) | round(2) if r.duration_ms else '—' }}s</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <div class="empty-state" style="padding:30px;">No individual results recorded for this run.</div>
+  {% endif %}
+
+  <div class="mt-3">
+    <a href="{{ url_for('execution.index') }}" class="btn btn-secondary">&#8592; Back to Runs</a>
+  </div>
+</div>
+{% endblock %}

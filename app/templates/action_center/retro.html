@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Retro — QA Platform{% endblock %}
+{% block page_title %}Retro{% endblock %}
+{% block content %}
+<div class="module-card">
+  <div class="flex justify-between items-center" style="margin-bottom:16px;">
+    <h2 style="font-size:16px;font-weight:700;">Sprint Retrospectives</h2>
+    <button onclick="document.getElementById('retro-form').style.display='block'" class="btn btn-primary btn-sm">+ Start Retro</button>
+  </div>
+  <div id="retro-form" style="display:none;background:var(--color-surface-muted);border-radius:8px;padding:16px;margin-bottom:16px;">
+    <form method="POST" action="{{ url_for('action_center.new_retro') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div style="margin-bottom:10px;">
+        <label style="display:block;font-size:12px;font-weight:500;margin-bottom:4px;">Sprint Name</label>
+        <input name="sprint_name" style="width:100%;padding:8px 10px;border:1px solid var(--color-surface-subtle);border-radius:6px;font-size:13px;" placeholder="e.g. Sprint 24" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm">Create</button>
+      <button type="button" onclick="document.getElementById('retro-form').style.display='none'" class="btn btn-secondary btn-sm">Cancel</button>
+    </form>
+  </div>
+  {% if retros %}
+    {% for r in retros %}
+    <div class="item-row">
+      <div class="item-name text-bold">{{ r.sprint_name }}</div>
+      <span class="badge badge-{{ 'success' if r.status == 'completed' else 'warning' }}">{{ r.status|title }}</span>
+      <div class="item-meta">{{ r.open_action_count }} open actions</div>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-state" style="padding:60px;">No retrospectives yet. Start your first sprint retro.</div>
+  {% endif %}
+</div>
+{% endblock %}

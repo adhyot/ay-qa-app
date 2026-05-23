@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Allocation — QA Platform{% endblock %}
+{% block page_title %}Allocation{% endblock %}
+{% block content %}
+<div class="module-card">
+  <div class="flex justify-between items-center" style="margin-bottom:16px;">
+    <h2 style="font-size:16px;font-weight:700;">Artifact Ownership</h2>
+    <a href="#" class="btn btn-primary btn-sm">+ Add Allocation</a>
+  </div>
+  {% if allocations %}
+  <table class="alloc-table">
+    <thead><tr><th>Type</th><th>Artifact</th><th>Owner</th><th>Team</th></tr></thead>
+    <tbody>{% for a in allocations %}
+    <tr>
+      <td><span class="badge badge-info">{{ a.artifact_type|replace('_',' ')|title }}</span></td>
+      <td>{{ a.artifact_name }}</td>
+      <td>{{ a.owner.full_name if a.owner else '<span class="unallocated-warning">Unallocated</span>'|safe }}</td>
+      <td>{{ a.team or '—' }}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+  {% else %}
+  <div class="empty-state" style="padding:60px;">No allocations defined. Map your Tests, Jobs, and Services to owners.</div>
+  {% endif %}
+</div>
+{% endblock %}

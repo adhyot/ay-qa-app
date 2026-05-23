@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}QA Platform{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- ── Top Bar ─────────────────────────────────── -->
+<header class="topbar">
+  <a href="{{ url_for('core.dashboard') }}" class="topbar-brand">
+    <div class="brand-logo">A</div>
+    <span class="brand-name">QA Platform</span>
+    {% if current_user.is_authenticated and current_user.organization %}
+      <span class="brand-org">{{ current_user.organization.name }}</span>
+    {% endif %}
+  </a>
+
+  {% set pt = self.page_title() | trim %}
+  {% if pt %}
+  <nav class="topbar-breadcrumb">
+    <a href="{{ url_for('core.dashboard') }}" class="breadcrumb-home">Home</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{{ pt }}</span>
+  </nav>
+  {% endif %}
+
+  <div class="topbar-right">
+
+    <!-- Grid nav icon -->
+    <div class="grid-nav" id="gridNavBtn" title="All modules">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+      </svg>
+    </div>
+
+    <!-- Grid nav dropdown -->
+    <div class="grid-nav-dropdown" id="gridNavDropdown">
+      <a href="{{ url_for('core.dashboard') }}" class="grid-nav-item">
+        <div class="grid-nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <span>Dashboard</span>
+      </a>
+      <a href="{{ url_for('execution.index') }}" class="grid-nav-item">
+        <div class="grid-nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <span>Execution Hub</span>
+      </a>
+      <a href="{{ url_for('action_center.index') }}" class="grid-nav-item">
+        <div class="grid-nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <span>Action Center</span>
+      </a>
+      <a href="{{ url_for('analytics.index') }}" class="grid-nav-item">
+        <div class="grid-nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <span>Analytics</span>
+      </a>
+      <a href="{{ url_for('automation.index') }}" class="grid-nav-item">
+        <div class="grid-nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <span>Automation &amp; Tools</span>
+      </a>
+      <a href="{{ url_for('planning.index') }}" class="grid-nav-item">
+        <div class="grid-nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <span>Planning &amp; Release</span>
+      </a>
+    </div>
+
+    {% if current_user.is_authenticated %}
+    <div class="user-chip">
+      <div class="avatar avatar-sm">{{ current_user.initials }}</div>
+      <span class="user-chip-name">{{ current_user.full_name }}</span>
+    </div>
+    {% endif %}
+  </div>
+</header>
+
+<!-- ── Page Content ───────────────────────────── -->
+<div class="page-content">
+  {% block content %}{% endblock %}
+</div>
+
+{% block auth_content %}{% endblock %}
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

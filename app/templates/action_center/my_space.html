@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}My Space — QA Platform{% endblock %}
+{% block page_title %}My Space{% endblock %}
+{% block content %}
+<div class="module-card">
+  <h2 style="font-size:16px;font-weight:700;margin-bottom:16px;">My Assigned Items</h2>
+  {% if my_bugs %}
+    {% for bug in my_bugs %}
+    <div class="item-row">
+      <span class="badge badge-{{ bug.severity }}">{{ bug.severity|title }}</span>
+      <div class="item-name">{{ bug.title }}</div>
+      <span class="badge badge-danger">{{ bug.status|title }}</span>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-state" style="padding:60px;">No items assigned to you. You're all clear!</div>
+  {% endif %}
+</div>
+{% endblock %}

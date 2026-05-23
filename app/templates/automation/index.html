@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Automation & Tools — QA Platform{% endblock %}
+{% block page_title %}Automation &amp; Tools{% endblock %}
+
+{% block content %}
+<div class="module-header">
+  <div class="module-header-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="10" rx="2"/>
+      <path d="M9 11V7a3 3 0 0 1 6 0v4"/>
+      <circle cx="9" cy="16" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="15" cy="16" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  </div>
+  <div>
+    <div class="module-header-title">Automation &amp; Tools</div>
+    <div class="module-header-desc">Tools, frameworks and coverage</div>
+  </div>
+</div>
+
+<div class="sub-tiles-grid cols-2">
+
+  <a href="{{ url_for('automation.internal_tools') }}" class="sub-tile">
+    <div class="sub-tile-icon">
+      <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/>
+        <line x1="8" y1="21" x2="16" y2="21"/>
+        <line x1="12" y1="17" x2="12" y2="21"/>
+        <circle cx="7.5" cy="10" r="1.5"/>
+        <path d="M12 8h5M12 12h3"/>
+      </svg>
+    </div>
+    <div class="sub-tile-title">Internal Tools</div>
+    <div class="sub-tile-desc">Connected tool health and integrations</div>
+    <div class="sub-tile-btn">Open</div>
+  </a>
+
+  <a href="{{ url_for('automation.framework') }}" class="sub-tile">
+    <div class="sub-tile-icon">
+      <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 18 22 12 16 6"/>
+        <polyline points="8 6 2 12 8 18"/>
+        <line x1="12" y1="4" x2="12" y2="20" stroke-dasharray="2 2"/>
+      </svg>
+    </div>
+    <div class="sub-tile-title">Framework</div>
+    <div class="sub-tile-desc">Test framework configuration</div>
+    <div class="sub-tile-btn">Open</div>
+  </a>
+
+</div>
+{% endblock %}
