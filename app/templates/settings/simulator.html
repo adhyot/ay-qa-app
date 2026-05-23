@@ -85,8 +85,13 @@
 </div>
 
 <script>
+const CSRF_TOKEN = '{{ csrf_token() }}';
+
 function toggleMaster() {
-  fetch('/settings/simulator/toggle', {method: 'POST'})
+  fetch('/settings/simulator/toggle', {
+    method: 'POST',
+    headers: {'X-CSRFToken': CSRF_TOKEN}
+  })
     .then(r => r.json())
     .then(data => {
       const btn = document.getElementById('masterToggle');
@@ -102,7 +107,10 @@ function toggleMaster() {
 }
 
 function toggleJob(jobKey, btn) {
-  fetch('/settings/simulator/job/' + jobKey, {method: 'POST'})
+  fetch('/settings/simulator/job/' + jobKey, {
+    method: 'POST',
+    headers: {'X-CSRFToken': CSRF_TOKEN}
+  })
     .then(r => r.json())
     .then(data => {
       if (data.enabled) {
