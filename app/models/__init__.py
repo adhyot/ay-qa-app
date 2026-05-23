@@ -9,3 +9,4 @@ from app.models.integration import Integration
 from app.models.allocation import Allocation
 from app.models.retro import SprintRetro, RetroActionItem
 from app.models.notification import Notification
+from app.models.simulator import SimulatorConfig, SimulatorLog
