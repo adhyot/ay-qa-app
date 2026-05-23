@@ -34,23 +34,24 @@ _BUG_TITLES = [
 ]
 
 
-def _get_config(org_id_hint=None):
+def _get_config():
     from app.models.simulator import SimulatorConfig
-    if org_id_hint:
-        return SimulatorConfig.query.filter_by(org_id=org_id_hint, enabled=True).first()
     return SimulatorConfig.query.filter_by(enabled=True).first()
 
 
 def _get_sim_user(org_id):
     from app.models.user import User
+    count = User.query.filter_by(org_id=org_id, is_active=True).filter(
+        User.email.like('sim_%')
+    ).count()
+    if count == 0:
+        return User.query.filter_by(org_id=org_id, is_active=True).first()
     user = (User.query
             .filter_by(org_id=org_id, is_active=True)
             .filter(User.email.like('sim_%'))
             .order_by(User.id)
-            .offset(random.randint(0, 4))
+            .offset(random.randint(0, count - 1))
             .first())
-    if not user:
-        user = User.query.filter_by(org_id=org_id, is_active=True).first()
     return user
 
 
@@ -198,6 +199,7 @@ def job_complete_run(app):
             if not run:
                 return
 
+            suite_name = run.suite.name if run.suite else 'suite'
             now = datetime.now(timezone.utc)
             if not run.started_at:
                 run.started_at = now
@@ -245,7 +247,7 @@ def job_complete_run(app):
 
             rate = round(pass_count / total * 100, 1)
             _append_log(config.org_id, 'complete_run',
-                        f'Run completed: {pass_count}/{total} passed ({rate}%) on {run.suite.name if run.suite else "suite"}')
+                        f'Run completed: {pass_count}/{total} passed ({rate}%) on {suite_name}')
             db.session.commit()
             _trim_log(config.org_id)
             db.session.commit()
@@ -264,19 +266,20 @@ def job_file_bug(app):
             if not config or not config.job_file_bug:
                 return
 
-            existing_result_ids = [
-                b.run_result_id for b in
-                Bug.query.filter_by(org_id=config.org_id).filter(Bug.run_result_id.isnot(None)).all()
-            ]
+            from app.extensions import db as _db
+            bugged_ids = _db.session.query(Bug.run_result_id).filter(
+                Bug.org_id == config.org_id,
+                Bug.run_result_id.isnot(None),
+            ).scalar_subquery()
 
-            result_q = (TestRunResult.query
-                        .filter(
-                            TestRunResult.org_id == config.org_id,
-                            TestRunResult.status == 'failed',
-                        ))
-            if existing_result_ids:
-                result_q = result_q.filter(~TestRunResult.id.in_(existing_result_ids))
-            result = result_q.order_by(TestRunResult.created_at.desc()).first()
+            result = (TestRunResult.query
+                      .filter(
+                          TestRunResult.org_id == config.org_id,
+                          TestRunResult.status == 'failed',
+                          ~TestRunResult.id.in_(bugged_ids),
+                      )
+                      .order_by(TestRunResult.created_at.desc())
+                      .first())
             if not result:
                 return
 
