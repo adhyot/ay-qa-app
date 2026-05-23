@@ -17,7 +17,7 @@ def app():
             email='test@test.com',
             full_name='Test User',
             org_id=org.id,
-            role='qa_engineer',
+            role='qa_manager',
         )
         user.set_password('password123')
         _db.session.add(user)

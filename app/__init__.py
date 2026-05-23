@@ -44,6 +44,9 @@ def _init_extensions(app: Flask):
             if user:
                 login_user(user, remember=True)
 
+    from app.simulator import start_scheduler
+    start_scheduler(app)
+
 
 def _register_blueprints(app: Flask):
     from app.blueprints.core import core_bp
@@ -61,6 +64,9 @@ def _register_blueprints(app: Flask):
     app.register_blueprint(analytics_bp)
     app.register_blueprint(automation_bp)
     app.register_blueprint(planning_bp)
+
+    from app.blueprints.settings import settings_bp
+    app.register_blueprint(settings_bp)
 
 
 def _register_shell_context(app: Flask):
