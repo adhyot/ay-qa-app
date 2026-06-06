@@ -103,6 +103,7 @@
   </div>
 
   <form method="POST" id="pinForm">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <input type="hidden" name="pin" id="pinInput" />
     <div class="pin-grid">
       {% for n in ['1','2','3','4','5','6','7','8','9','','0','⌫'] %}
