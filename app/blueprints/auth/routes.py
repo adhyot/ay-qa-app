@@ -7,23 +7,23 @@ from app.models.organization import Organization
 from slugify import slugify
 
 
+ACCESS_PIN = '0072'
+
+
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('core.dashboard'))
 
     if request.method == 'POST':
-        email = request.form.get('email', '').strip().lower()
-        password = request.form.get('password', '')
-        remember = request.form.get('remember') == 'on'
-
-        user = User.query.filter_by(email=email, is_active=True).first()
-        if user and user.check_password(password):
-            login_user(user, remember=remember)
-            user.record_login()
-            next_page = request.args.get('next')
-            return redirect(next_page or url_for('core.dashboard'))
-        flash('Invalid email or password.', 'danger')
+        pin = request.form.get('pin', '').strip()
+        if pin == ACCESS_PIN:
+            user = User.query.filter_by(is_active=True).first()
+            if user:
+                login_user(user, remember=True)
+                next_page = request.args.get('next')
+                return redirect(next_page or url_for('core.dashboard'))
+        flash('Incorrect PIN. Please try again.', 'danger')
 
     return render_template('auth/login.html')
 
