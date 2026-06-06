@@ -119,7 +119,7 @@ html, body {
   position: fixed;
   top: calc(var(--topbar-height) + 6px);
   right: 16px;
-  width: 210px;
+  width: 200px;
   background: var(--color-surface-card);
   border-radius: var(--radius-tile);
   box-shadow: 0 8px 32px rgba(232, 98, 36, 0.15), 0 2px 8px rgba(0,0,0,0.08);
@@ -127,41 +127,48 @@ html, body {
   overflow: hidden;
   z-index: 200;
   animation: dropIn 0.15s ease;
+  padding: 4px;
 }
-.grid-nav-dropdown.open { display: block; }
+.grid-nav-dropdown.open {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+}
 
 @keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
 
 .grid-nav-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
+  text-align: center;
+  gap: 3px;
+  padding: 5px 4px;
   text-decoration: none;
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
-  border-bottom: 1px solid var(--color-surface-subtle);
-  transition: background 0.12s, color 0.12s;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
-.grid-nav-item:last-child { border-bottom: none; }
 .grid-nav-item:hover {
   background: var(--color-surface-muted);
   color: var(--color-primary);
   text-decoration: none;
+  border-color: var(--color-surface-subtle);
 }
 .grid-nav-item:hover .grid-nav-icon {
-  background: var(--color-primary-light);
-  color: #FFFFFF;
+  color: var(--color-primary);
 }
 
 .grid-nav-icon {
-  width: 28px; height: 28px;
+  width: 26px; height: 26px;
   border-radius: 7px;
   background: var(--color-surface-muted);
   border: 1px solid var(--color-surface-subtle);
   display: flex; align-items: center; justify-content: center;
-  color: var(--color-primary);
+  color: var(--color-icon);
   flex-shrink: 0;
   transition: background 0.15s, color 0.15s;
 }
