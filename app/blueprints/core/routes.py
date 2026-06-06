@@ -5,6 +5,7 @@ from app.blueprints.core.helpers import get_dashboard_summary
 
 
 @core_bp.route('/')
+@login_required
 def index():
     return redirect(url_for('core.dashboard'))
 
