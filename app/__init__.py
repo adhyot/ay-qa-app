@@ -33,16 +33,15 @@ def _init_extensions(app: Flask):
     def load_user(user_id: str):
         return User.query.get(user_id)
 
-    # AUTH BYPASS — auto-login the first user so login is skipped.
-    # Remove this block when ready to activate authentication.
-    @app.before_request
-    def auto_login():
-        from flask_login import current_user, login_user
-        from flask import request
-        if not current_user.is_authenticated:
-            user = User.query.filter_by(is_active=True).first()
-            if user:
-                login_user(user, remember=True)
+    if app.debug:
+        # AUTH BYPASS — auto-login the first user so login is skipped in development.
+        @app.before_request
+        def auto_login():
+            from flask_login import current_user, login_user
+            if not current_user.is_authenticated:
+                user = User.query.filter_by(is_active=True).first()
+                if user:
+                    login_user(user, remember=True)
 
     from app.simulator import start_scheduler
     start_scheduler(app)
